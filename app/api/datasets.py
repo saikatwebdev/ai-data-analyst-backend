@@ -6,6 +6,8 @@ from app.analysis.profiler import profile_dataset
 from app.analysis.statistics import numerical_statistics
 from app.analysis.outliers import detect_outliers
 from app.analysis.correlations import correlation_analysis
+from app.analysis.categorical import categorical_analysis
+
 
 router = APIRouter(
     prefix = "/datasets",
@@ -36,11 +38,12 @@ async def upload_dataset(file: UploadFile = File(...)):
     statistics = numerical_statistics(df) # for numerical analysis
     outliers = detect_outliers(df) # detects outliers using iqr
     correlations = correlation_analysis(df) # extract the correlation analysis btw the numerical values within data
-
+    categoricals = categorical_analysis(df) # will return normal value counts and stuffs with categorical data columns
     return {
         "filename":file.filename,
         "profile": profile,
         "statistics":statistics,
         "outliers": outliers,
-        "correlations":correlations
+        "correlations":correlations,
+        "categoricals": categoricals,
     }
