@@ -5,7 +5,7 @@ import pandas as pd
 from app.analysis.profiler import profile_dataset
 from app.analysis.statistics import numerical_statistics
 from app.analysis.outliers import detect_outliers
-
+from app.analysis.correlations import correlation_analysis
 
 router = APIRouter(
     prefix = "/datasets",
@@ -35,11 +35,12 @@ async def upload_dataset(file: UploadFile = File(...)):
     profile = profile_dataset(df)  # connect to the profiler to get the all analytics
     statistics = numerical_statistics(df) # for numerical analysis
     outliers = detect_outliers(df) # detects outliers using iqr
-
+    correlations = correlation_analysis(df) # extract the correlation analysis btw the numerical values within data
 
     return {
         "filename":file.filename,
         "profile": profile,
         "statistics":statistics,
-        "outliers": outliers
+        "outliers": outliers,
+        "correlations":correlations
     }
