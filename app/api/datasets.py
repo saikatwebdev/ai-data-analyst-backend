@@ -3,6 +3,9 @@ from fastapi import APIRouter,  UploadFile, File, HTTPException
 import pandas as pd
 
 from app.analysis.profiler import profile_dataset
+from app.analysis.statistics import numerical_statistics
+
+
 
 router = APIRouter(
     prefix = "/datasets",
@@ -30,8 +33,9 @@ async def upload_dataset(file: UploadFile = File(...)):
         )
 
     profile = profile_dataset(df)  # connect to the profiler to get the all analytics
-
+    statistics = numerical_statistics(df) # for numerical analysis
     return {
         "filename":file.filename,
-        "profile": profile
+        "profile": profile,
+        "statistics":statistics,
     }
