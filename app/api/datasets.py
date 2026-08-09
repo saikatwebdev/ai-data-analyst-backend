@@ -4,7 +4,7 @@ import pandas as pd
 
 from app.analysis.profiler import profile_dataset
 from app.analysis.statistics import numerical_statistics
-
+from app.analysis.outliers import detect_outliers
 
 
 router = APIRouter(
@@ -34,8 +34,12 @@ async def upload_dataset(file: UploadFile = File(...)):
 
     profile = profile_dataset(df)  # connect to the profiler to get the all analytics
     statistics = numerical_statistics(df) # for numerical analysis
+    outliers = detect_outliers(df) # detects outliers using iqr
+
+
     return {
         "filename":file.filename,
         "profile": profile,
         "statistics":statistics,
+        "outliers": outliers
     }
