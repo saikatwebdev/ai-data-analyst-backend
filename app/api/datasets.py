@@ -1,0 +1,37 @@
+import io
+from fastapi import APIRouter,  UploadFile, File, HTTPException
+import pandas as pd
+
+from app.analysis.profiler import profile_dataset
+
+router = APIRouter(
+    prefix = "/datasets",
+    tags = ["Datasets"]
+)
+
+@router.post("/upload")
+async def upload_dataset(file: UploadFile = File(...)):
+    if not file.filename:
+        raise HTTPException(
+            status_code=400,
+            detail="No file provided"
+        )
+    contents = await file.read() # if there is any file uploaded then save it into contents
+
+    if file.filename.endswith(".csv"):
+        df = pd.read_csv(io.BytesIO(contents))
+    elif file.filename.endswith((".xlsx", ".xls")):
+        df = pd.read_excel(io.BytesIO(contents))
+    else:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Only CSV and Excel files are supported"
+        )
+
+    profile = profile_dataset(df)  # connect to the profiler to get the all analytics
+
+    return {
+        "filename":file.filename,
+        "profile": profile
+    }
