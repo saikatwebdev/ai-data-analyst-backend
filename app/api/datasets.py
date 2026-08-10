@@ -24,7 +24,6 @@ async def upload_dataset(file: UploadFile = File(...)):
     elif file.filename.endswith((".xlsx", ".xls")):
         df = pd.read_excel(io.BytesIO(contents))
     else:
-
         raise HTTPException(
             status_code=400,
             detail="Only CSV and Excel files are supported"
