@@ -7,6 +7,8 @@ from app.analysis.statistics import numerical_statistics
 from app.analysis.outliers import detect_outliers
 from app.analysis.correlations import correlation_analysis
 from app.analysis.categorical import categorical_analysis
+from app.analysis.eda import run_eda
+
 
 
 router = APIRouter(
@@ -33,17 +35,12 @@ async def upload_dataset(file: UploadFile = File(...)):
             status_code=400,
             detail="Only CSV and Excel files are supported"
         )
-
-    profile = profile_dataset(df)  # connect to the profiler to get the all analytics
-    statistics = numerical_statistics(df) # for numerical analysis
-    outliers = detect_outliers(df) # detects outliers using iqr
-    correlations = correlation_analysis(df) # extract the correlation analysis btw the numerical values within data
-    categoricals = categorical_analysis(df) # will return normal value counts and stuffs with categorical data columns
+    # removed the one by one different analysis
+    # to manage the eda whole part into one file rather make this file heavy
+    # we have created one separate eda.py file in the analysis folder to handle the whole analysis part in one file 
+    # and then we added this run_eda() function to get all the analysis from the eda file and show it to the user using json file
+    eda_result = run_eda(df) # everything working fine
     return {
         "filename":file.filename,
-        "profile": profile,
-        "statistics":statistics,
-        "outliers": outliers,
-        "correlations":correlations,
-        "categoricals": categoricals,
+        "analysis":eda_result,
     }
