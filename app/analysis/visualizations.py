@@ -1,18 +1,35 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
 import pandas as pd
-# the main challange: we can't assume this category columns as same as what I added like revenue category. It might not present in the other csv/xlsx file. We need one AI layer to detect the preferred categroy columns
 
-def revenue_by_category(
-        df:pd.DataFrame,
-        category_column: str,
-        revenue_column:str,
-)->dict:
-    result= (
-        df.groupby(category_column)[revenue_column]
-        .sum()
-        .sort_values(ascending=False)
+
+def create_correlation_heatmap(
+        df: pd.DataFrame,
+        output_path: str,
+
+) -> None:
+
+    numerical_df = df.select_dtypes(
+        include="number"
     )
 
-    return {
-        "labels": result.index.astype(str).tolist(),
-        "values": result.astype(float).tolist(),
-    }
+    if numerical_df.shape[1]<2:
+        return
+
+    correlation_matrix = numerical_df.corr()
+
+    plt.figure(figsize=(10,8))
+
+    sns.heatmap(
+        correlation_matrix,
+        annot=True,
+        fmt=".2f",
+        cmap="coolwarm",
+        center=0,
+    )
+
+    plt.title("Correlation Heatmap")
+
+    plt.tight_layout()
+    plt.savefig(output_path)
+    plt.close()
