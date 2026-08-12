@@ -1,14 +1,18 @@
 import io
+import uuid
 from fastapi import APIRouter,  UploadFile, File, HTTPException
 import pandas as pd
 
 
 from app.analysis.eda import run_eda
 from app.analysis.validation import validate_dataframe
+from app.services.dataset_store import save_dataset
 router = APIRouter(
     prefix = "/datasets",
     tags = ["Datasets"]
 )
+
+
 
 @router.post("/upload")
 async def upload_dataset(file: UploadFile = File(...)):
@@ -38,6 +42,11 @@ async def upload_dataset(file: UploadFile = File(...)):
             detail=errors
         )
 
+    # Generating id for memory inclusion and exclusion of the dataframe
+    dataset_id = str(uuid.uuid4())
+
+    save_dataset(dataset_id, df)
+
 
 
     # removed the one by one different analysis
@@ -49,6 +58,7 @@ async def upload_dataset(file: UploadFile = File(...)):
 
 
     return {
+        "dataset_id":dataset_id,
         "filename":file.filename,
         "analysis":eda_result,
     }
