@@ -1,15 +1,25 @@
-from dotenv import load_dotenv
-from langchain.chat_models import init_chat_model
+from app.agents.data_agent import create_data_agent
 
 
-load_dotenv()
+dataset_id = "8881be36-ca62-43da-a917-c4ad5afed3cc"
 
-model = init_chat_model(
-    "google_genai:gemini-3.5-flash"
+
+agent = create_data_agent(dataset_id)
+
+
+result = agent.invoke(
+    {
+        "messages":[
+            {
+                "role": "user",
+                "content":"What is the average math score?"
+            }
+        ]
+    }
 )
 
-response = model.invoke(
-    "explain what a pandas dataframe is in one sentence."
-)
 
-print(response.content)
+print(
+    result["messages"][-1].content
+
+)
