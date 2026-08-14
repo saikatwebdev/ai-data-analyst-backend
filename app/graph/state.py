@@ -7,6 +7,8 @@ class AnalystState(TypedDict):
 
     user_question: str
 
+    intent:str
+
     analysis_result: str
 
     business_context: str
