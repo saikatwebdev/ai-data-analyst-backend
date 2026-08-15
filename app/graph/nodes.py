@@ -37,11 +37,6 @@ def classify_question(
         else "general"
     )
 
-    print("\n==============================")
-    print("QUESTION:", question)
-    print("INTENT:", intent)
-    print("==============================\n")
-
     return {
         **state,
         "intent": intent,
