@@ -1,7 +1,6 @@
 Sales Policy
 
-High-value customers are customers whose
-annual purchase value exceeds ₹100,000.
+High-value customers are customers whose annual purchase value exceeds ₹100,000.
 
 Customers who make more than three purchases
 within a quarter receive priority support.
